@@ -18,7 +18,7 @@ config = { "log": logger}
 config["input_path"] = "./input"
 config["output_path"] = "./output"
 
-config["bit_depth"] = 16
+config["bit_depth"] = 8
 config["image_type_extension"] = ".png"
 config["normalize"] = False
 
