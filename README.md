@@ -31,7 +31,7 @@ Requirements
 Installation
 ------------
 
-- Download all the code / clone the repository from github and save its contents in a temporary folder
+Download all the code / clone the repository from github and save its contents in a temporary folder
 
 If you use any Python IDE (VSCode, PyCharm, Spyder, etc...), just:
 - Create a new project
