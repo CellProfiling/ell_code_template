@@ -28,7 +28,7 @@ The code expects you to perform certain steps to run with your data:
   - Locate the line `config["input_path"] = "./input"` and change the path value with your desired input directory. This directory should contain all your images OR all the subfolders present in `path_list.csv` (see below). 
   - Locate the line `config["output_path"] = "./output"` and change the path value with your desired output directory. This directory will contain the resulting generated images OR the resulting subfolders stated `path_list.csv` (see below). OBS: it will be created if it does not exists
 - You can copy all your images in the stated input folder OR use a detailed `path_list.csv` listing:
-  - If you want to copy all your images in the input folder, just comment all lines in `path_list.csv` with the character "#" or just directly delete the `path_list.csv` file.
+  - If you want to copy all your images in the input folder, just delete the `path_list.csv` file. OBS: don't choose an output folder inside the stated input folder if you are going this way! 
   - If you want to use a detailed `path_list.csv` listing:
     - Create the desired subfolder structure in your input folder: one subfolder for every line in `path_list.csv` file.
     - Copy the associated images in each created subfolder.
@@ -45,5 +45,5 @@ Running the code
    - `cd /home/lab/sandbox/example`
    - `source bin/activate`
 
-Once you have activated your virtual environment and modified all the desired parameters (see section **Setup**, just run the code with `python process.py`
+Once you have activated your virtual environment and modified all the desired parameters (see section **Setup**, just run the code with `python process.py`. OBS: you have to run the `process.py` file, which will on its turn call the rest of the code.
 

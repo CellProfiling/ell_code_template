@@ -26,7 +26,7 @@ The code expects you to perform certain steps to run with your data:
 
 - Edit and modify `process.py` file:
   - Locate the line `config["input_path"] = "./input"` and change the path value with your desired input directory. This directory should contain the qptiff file. 
-  - Locate the line `config["output_path"] = "./output"` and change the path value with your desired output directory. This directory will contain the resulting marker images. OBS: it will be created if it does not exists
+  - Locate the line `config["output_path"] = "./output"` and change the path value with your desired output directory. This directory will contain the resulting marker images. OBS: don't choose an output folder inside the stated input folder!
   - Locate the line `config["bit_depth"] = 8` and change the integer value with the desired bit-depth of the resulting marker images. OBS: 8, 16 or 32 are the normal expected values.  
   - Locate the line `config["image_type_extension"] = ".png"` and change the value with the desired image format/extension of the resulting marker images. OBS: ".png", ".jpg" or ".tif" are the usual expected values. 
   - Locate the line `config["normalize"] = false` and change the value with if you want to apply a min-max normalization to the resulting marker images.
@@ -42,5 +42,5 @@ Running the code
    - `cd /home/lab/sandbox/example`
    - `source bin/activate`
 
-Once you have activated your virtual environment and modified all the desired parameters (see section **Setup**, just run the code with `python process.py`
+Once you have activated your virtual environment and modified all the desired parameters (see section **Setup**, just run the code with `python process.py`. OBS: you have to run the `process.py` file, which will on its turn call the rest of the code.
 
