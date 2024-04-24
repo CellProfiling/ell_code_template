@@ -32,6 +32,8 @@ Let's start with the `template.py` file:
   - If you don't want to use command line arguments, remove the section under the comment `# If you want to use command line parameters with your script, add them here`
 - If you don't want to use the file iteration functionality directed by `path_list.csv` file, just delete it.
 
+For the configuration mechanisms you DO want to keep, modify them to suit your needs. You should always use at least the `input_path` and `output_path` parameters one way or another, so your script can be interoperable with the rest seamlessly.
+
 Final touches:
 - You might want to rename the `your_code.py` file for something more related to the functionality your code aims to provide, like `custom_clustering.py` or `calculate_csv.py`
   - You should also probably change the function `def your_function(config, input_path, output_path):` inside this file with something more memorable.
