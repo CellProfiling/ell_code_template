@@ -59,14 +59,14 @@ If you want to install it via basic Python virtual environment:
 Running the code
 ---------------- 
 
-**NOTE**: remember that you have to access your created virtual environment before running the code! To do so, navigate to the directory you created and activate it.
- - Example:
-   - `cd /home/lab/sandbox/example`
-   - `source bin/activate`
+If you use any Python IDE (VSCode, PyCharm, Spyder, etc...), just run the file that starts your program (usually `template.py`)
 
-Once you have activated your virtual environment, just run the code with `python {chosen_script.py}`
- - Example:
-   - `python otsu_explorer.py`
+If you use basic Python virtual environment:
+- Remember that you have to access your created virtual environment before running the code! To do so, navigate to the directory you created and activate it. Example:
+  - `cd /home/lab/sandbox/example`
+  - `source bin/activate`
+- Once you have activated your virtual environment, just run the code with `python {chosen_script.py}`. Example:
+  - `python template.py`
 
 
 Check the `README.md` file in each template/example you download, it might have additional indications that you need to follow for the code to run.
