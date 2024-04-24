@@ -24,13 +24,21 @@ Extend the template
 
 Although the template works from scratch, it does not much without your code and modifications. 
 
+Let's start with the `template.py` file:
+- Find the line `logger = logging.getLogger("My program")` and change the "My program" value for something short and related to your project.
+- You might want to remove unused configuration mechanisms: 
+  - If you don't want to use constants, remove the section under the comment `# If you want to use constants with your script, add them here`
+  - If you don't want to use YAML config file, remove the section under the comment `# If you want to use a configuration file with your script, add it here`
+  - If you don't want to use command line arguments, remove the section under the comment `# If you want to use command line parameters with your script, add them here`
+- If you don't want to use the file iteration functionality directed by `path_list.csv` file, just delete it.
 
-
-
-
-
-- You might want to rename the `template.py` file for something more suitable for you, like `process.py` or `core.py`
+Final touches:
 - You might want to rename the `your_code.py` file for something more related to the functionality your code aims to provide, like `custom_clustering.py` or `calculate_csv.py`
+  - You should also probably change the function `def your_function(config, input_path, output_path):` inside this file with something more memorable.
+  - Remember to also change in `template.py` file the lines `import your_code` and `your_code.your_function(config, `[...]
+- You might want to rename the `template.py` file for something more suitable for you, like `process.py` or `core.py`
+
+Now you are ready to start working in your own code!
 
 
 
