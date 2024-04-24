@@ -32,6 +32,14 @@ Installation
 ------------
 
 - Download all the code / clone the repository from github and save its contents in a temporary folder
+
+If you use any Python IDE (VSCode, PyCharm, Spyder, etc...), just:
+- Create a new project
+- Create a virtual environment for that project
+- Copy the contents of the item you want to work with from the downloaded code inside your project folder
+- Install the project requirements through your IDE
+
+If you want to install it via basic Python virtual environment:
 - Install `python3`, `pip` and `virtualenv` in case you don't have them yet
 - Navigate to your desired working directory
   - Example: `cd /home/lab/sandbox`
