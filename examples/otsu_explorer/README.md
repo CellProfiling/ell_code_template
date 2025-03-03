@@ -32,7 +32,7 @@ The code expects you to perform certain steps to run with your data:
   - If you want to use a detailed `path_list.csv` listing:
     - Create the desired subfolder structure in your input folder: one subfolder for every line in `path_list.csv` file.
     - Copy the associated images in each created subfolder.
-    - Write a line in `path_list.csv` for each subolder, with the input subfolder first and the output subfolder after a comma ","
+    - Write a line in `path_list.csv` for each subfolder, with the input subfolder first and the output subfolder after a comma ","
     - You can comment any of the lines with the character "#"
   
 
