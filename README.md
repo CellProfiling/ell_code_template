@@ -16,6 +16,8 @@ Key features
 - **Examples based on these templates with real functionality**
   - Readily available code to perform several requested tasks by the lab members.
   - Simple installation and usage.
+- **Other project related utility scripts**
+  - Custom made scrips for specific projects still to be ported (if needed) to the code templates
 
  
 
