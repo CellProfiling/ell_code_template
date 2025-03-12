@@ -29,7 +29,7 @@ config["log"].info('----------')
 
 # We load the model
 model_nuc = models.CellposeModel(gpu=False, model_type='nuclei')
-model_cyto = models.CellposeModel(gpu=False, model_type='cyto')
+model_cyto = models.CellposeModel(gpu=False, model_type='cyto3')
 
 # If we provide a "path_list.csv" file, we run our code for each pair of input/output sub-folders
 if os.path.exists("./path_list.csv"):
@@ -39,17 +39,20 @@ if os.path.exists("./path_list.csv"):
         if curr_set.strip() != "" and not curr_set.startswith("#"):
             curr_set_arr = curr_set.split(",")
             # We create the output folder
-            os.makedirs(curr_set_arr[2].strip(), exist_ok=True)
+            os.makedirs(curr_set_arr[3].strip(), exist_ok=True)
             # We load the images as numpy arrays
             nuclei_img = imread(curr_set_arr[0].strip(), as_gray=True)
-            cyto_img = None
+            cyto_img1 = None
+            cyto_img2 = None
             if not config["nuclei_only"]:
-                cyto_img = imread(curr_set_arr[1].strip(), as_gray=True)
+                cyto_img1 = imread(curr_set_arr[1].strip(), as_gray=True)
+                if curr_set_arr[2].strip() != "":
+                    cyto_img2 = imread(curr_set_arr[2].strip(), as_gray=True)
 
             # Single cell crops
-            cell_bbox_df = cellpose_segmentation.segment(model_nuc, model_cyto, nuclei_img, cyto_img, config["nuc_diameter"], config["cyto_diameter"], curr_set_arr[2].strip(), curr_set_arr[3].strip())
+            cell_bbox_df = cellpose_segmentation.segment(model_nuc, model_cyto, nuclei_img, cyto_img1, cyto_img2, config["nuc_diameter"], config["cyto_diameter"], curr_set_arr[3].strip(), curr_set_arr[4].strip())
 
-            config["log"].info("- Saved results for " + curr_set_arr[3].strip())
+            config["log"].info("- Saved results for " + curr_set_arr[4].strip())
 
 
 config["log"].info('----------')
