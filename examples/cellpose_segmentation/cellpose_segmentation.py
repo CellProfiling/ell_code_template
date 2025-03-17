@@ -269,6 +269,7 @@ def merge_segmentations(seg_nuc, seg_cyto1, seg_cyto2):
 # Code to generate the segmentation
 def segment(model_nuc, model_cyto, nuclei_img, cyto_img1, cyto_img2, nuc_diameter, cell_diameter, output_folder, output_prefix):
     channels = [1, 2]
+    # We segment the nuclei using cellpose default nuclei model
     nuclei_masks, flows, styles = model_nuc.eval(
         np.stack([nuclei_img, np.zeros_like(nuclei_img)]),
         channels=channels,
@@ -280,6 +281,7 @@ def segment(model_nuc, model_cyto, nuclei_img, cyto_img1, cyto_img2, nuc_diamete
     if cyto_img1 is not None:
         cell_masks = None
 
+        # We segment the 1st cytoplasm marker using cellpose default cyto3 model
         cyto1_masks, flows, styles = model_cyto.eval(
             np.stack([sharpen(adaptive_hist(cyto_img1)), nuclei_masks]),
             channels=channels,
@@ -290,6 +292,8 @@ def segment(model_nuc, model_cyto, nuclei_img, cyto_img1, cyto_img2, nuc_diamete
         imsave(output_folder + "/" + output_prefix + "cyto1_mask.png", cyto1_masks)
 
         if cyto_img2 is not None:
+            # In case we are using 2 cytoplasm markers
+            # We segment the 2nd cytoplasm marker using cellpose default cyto3 model
             cyto2_masks, flows, styles = model_cyto.eval(
                 np.stack([sharpen(adaptive_hist(cyto_img2)), nuclei_masks]),
                 channels=channels,
@@ -299,8 +303,10 @@ def segment(model_nuc, model_cyto, nuclei_img, cyto_img1, cyto_img2, nuc_diamete
             )
             imsave(output_folder + "/" + output_prefix + "cyto2_mask.png", cyto2_masks)
 
+            # We merge the nuclei and 2 cytoplasm segmentations
             cell_masks = merge_segmentations(nuclei_masks, cyto1_masks, cyto2_masks) #cyto2_masks)
         else:
+            # We merge the nuclei and cytoplasm segmentations
             cell_masks = merge_segmentations(nuclei_masks, cyto1_masks, None)
 
         imsave(output_folder + "/" + output_prefix + "cell_mask.png", cell_masks)

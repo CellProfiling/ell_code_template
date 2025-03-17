@@ -49,8 +49,8 @@ if os.path.exists("./path_list.csv"):
                 if curr_set_arr[2].strip() != "":
                     cyto_img2 = imread(curr_set_arr[2].strip(), as_gray=True)
 
-            # Single cell crops
-            cell_bbox_df = cellpose_segmentation.segment(model_nuc, model_cyto, nuclei_img, cyto_img1, cyto_img2, config["nuc_diameter"], config["cyto_diameter"], curr_set_arr[3].strip(), curr_set_arr[4].strip())
+            # Segmentation
+            cellpose_segmentation.segment(model_nuc, model_cyto, nuclei_img, cyto_img1, cyto_img2, config["nuc_diameter"], config["cyto_diameter"], curr_set_arr[3].strip(), curr_set_arr[4].strip())
 
             config["log"].info("- Saved results for " + curr_set_arr[4].strip())
 

@@ -4,7 +4,7 @@ import os
 import pandas as pd
 from skimage.io import imread
 
-import hpa_cell_cropper
+import cell_cropper
 
 
 # This is the log configuration. It will log everything to a file AND the console
@@ -54,7 +54,7 @@ if os.path.exists("./path_list.csv"):
 
             cell_mask = imread(curr_set_arr[4].strip(), as_gray=True)
             # Single cell crops
-            cell_bbox_df = hpa_cell_cropper.generate_crops(image_stack, cell_mask, config["crop_size"], config["mask_cell"], curr_set_arr[5].strip(), curr_set_arr[6].strip())
+            cell_bbox_df = cell_cropper.generate_crops(image_stack, cell_mask, config["crop_size"], config["mask_cell"], curr_set_arr[5].strip(), curr_set_arr[6].strip())
             df = pd.concat([df, cell_bbox_df], ignore_index=True)
 
             config["log"].info("- Saved results for " + curr_set_arr[6].strip())

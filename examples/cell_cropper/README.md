@@ -1,5 +1,5 @@
-HPA cell cropper
-================
+Cell cropper
+============
 
 This program, built upon the base template, will generate the cell crops from previously segmented HPA-style images. The code it's embedded in HPACellSegmentator, but this version can help you crop the images later on and/or other kind of similar image types. 
 
@@ -25,6 +25,7 @@ Setup
 The code expects you to perform certain steps to run with your data:
 
 - Edit and modify `process.py` file:
+  - Locate the line `config["gray"] = True` and change the value to `False` if your markers are in RGB for any reason. 
   - Locate the line `config["crop_size"] = 1024` and change the value to your desired crop size. 
   - Locate the line `config["mask_cell"] = False` and change the value to `True` if you want to additionally generate all the cell crops masked by the cells boundaries.
 
@@ -62,3 +63,12 @@ Running the code
 
 Once you have activated your virtual environment and modified all the desired parameters (see section **Setup**, just run the code with `python process.py`. OBS: you have to run the `process.py` file, which will on its turn call the rest of the code.
 
+
+
+Output
+------ 
+
+Cell cropper generates in the chosen crop_folder the following files:
+- `[output_prefix]_cell[X]_crop_[red|yellow|blue|green].png`: a cropped cell from the FOV.
+- `[output_prefix]_cell[X]_crop_masked_[red|yellow|blue|green].png`: a cropped and masked cell from the FOV (if the mask_cell option was selected).
+- Additionally, a `crop_info.csv` file will be created containing all generated cell crops bboxes for convenience.
