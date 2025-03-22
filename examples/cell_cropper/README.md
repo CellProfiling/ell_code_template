@@ -27,6 +27,7 @@ The code expects you to perform certain steps to run with your data:
 - Edit and modify `process.py` file:
   - Locate the line `config["gray"] = True` and change the value to `False` if your markers are in RGB for any reason. 
   - Locate the line `config["crop_size"] = 1024` and change the value to your desired crop size. 
+  - Locate the line `config["crop_bitdepth"] = 8` and change the value to your desired crop resulting images bit depth. 
   - Locate the line `config["mask_cell"] = False` and change the value to `True` if you want to additionally generate all the cell crops masked by the cells boundaries.
 
 To run HPA cell cropper you have to gather the information about the sets of images you want to process. HPA cell cropper reads `path_list.csv` to locate each set of images, in the following .csv format: 
