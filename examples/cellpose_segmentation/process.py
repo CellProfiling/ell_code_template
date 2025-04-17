@@ -17,8 +17,8 @@ config = { "log": logger}
 
 # If you want to use constants with your script, add them here
 config["nuclei_only"] = False
-config["nuc_diameter"] = 80
-config["cyto_diameter"] = 240
+config["nuc_diameter"] = 250
+config["cyto_diameter"] = 500
 
 # Log the start time and the final configuration so you can keep track of what you did
 config["log"].info('Start: ' + datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S"))

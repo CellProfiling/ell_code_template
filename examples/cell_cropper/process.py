@@ -3,6 +3,7 @@ import logging
 import os
 import pandas as pd
 from skimage.io import imread
+import cv2
 
 import cell_cropper
 
@@ -20,7 +21,7 @@ config = { "log": logger}
 config["gray"] = True
 config["crop_size"] = 1024
 config["crop_bitdepth"] = 8
-config["mask_cell"] = False
+config["mask_cell"] = True
 
 # Log the start time and the final configuration so you can keep track of what you did
 config["log"].info('Start: ' + datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
@@ -43,15 +44,15 @@ if os.path.exists("./path_list.csv"):
             # We load the images as numpy arrays
             image_stack = []
             if config["gray"]:
-                image_stack.append([imread(curr_set_arr[0].strip(), as_gray=True)])
-                image_stack.append([imread(curr_set_arr[1].strip(), as_gray=True)])
-                image_stack.append([imread(curr_set_arr[2].strip(), as_gray=True)])
-                image_stack.append([imread(curr_set_arr[3].strip(), as_gray=True)])
+                image_stack.append([cv2.imread(curr_set_arr[0].strip(), -1)])
+                image_stack.append([cv2.imread(curr_set_arr[1].strip(), -1)])
+                image_stack.append([cv2.imread(curr_set_arr[2].strip(), -1)])
+                image_stack.append([cv2.imread(curr_set_arr[3].strip(), -1)])
             else:
-                image_stack.append([imread(curr_set_arr[0].strip())[:, :, 0]])
-                image_stack.append([imread(curr_set_arr[1].strip())[:, :, 0]])
-                image_stack.append([imread(curr_set_arr[2].strip())[:, :, 2]])
-                image_stack.append([imread(curr_set_arr[3].strip())[:, :, 1]])
+                image_stack.append([cv2.imread(curr_set_arr[0].strip(), -1)[:, :, 0]])
+                image_stack.append([cv2.imread(curr_set_arr[1].strip(), -1)[:, :, 0]])
+                image_stack.append([cv2.imread(curr_set_arr[2].strip(), -1)[:, :, 2]])
+                image_stack.append([cv2.imread(curr_set_arr[3].strip(), -1)[:, :, 1]])
 
             cell_mask = imread(curr_set_arr[4].strip(), as_gray=True)
             # Single cell crops
