@@ -78,7 +78,7 @@ def safe_crop(image, bbox):
 
 
 # Optional code to generate the segmented cell crops
-def generate_crops(image_stack, cell_mask, crop_size, crop_bitdepth, mask_cell, output_folder, output_prefix):
+def generate_crops(image_stack, cell_mask, crop_size, crop_bitdepth, crop_mask, mask_cell, output_folder, output_prefix):
     regions = regionprops(cell_mask)
 
     cell_bboxes = []
@@ -94,6 +94,14 @@ def generate_crops(image_stack, cell_mask, crop_size, crop_bitdepth, mask_cell, 
             bbox_center[0] + crop_size // 2,
             bbox_center[1] + crop_size // 2,
         )
+
+        if crop_mask:
+            this_cell_mask = cell_mask.copy()
+            this_cell_mask[this_cell_mask != region.label] = 0
+            this_cell_mask[this_cell_mask == region.label] = 1
+            this_cell_mask = grey_dilation(this_cell_mask, size=7)
+            curr_cell_mask, _ = safe_crop(this_cell_mask, fixed_bbox)
+            imsave(f"{output_folder}/{output_prefix}cell{region.label}_mask.png", np.uint8(curr_cell_mask * 255))
 
         for curr_img_index in range(len(image_stack)):
             if curr_img_index != 0:
