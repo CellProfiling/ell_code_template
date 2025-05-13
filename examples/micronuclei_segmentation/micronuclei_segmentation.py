@@ -60,7 +60,7 @@ def segment_micronuclei(nuc_img, nuclei_min_diameter, micnuc_min_diameter, micnu
                     micnuc_data.append({ "id" : output_prefix,
                                          "micnuc_label": curr_micnuc.label,
                                          "nuclei_label": nuc_seg ,
-                                         "area": curr_micnuc.area,
+                                         "area": int(curr_micnuc.area),
                                          "centroid_xy": str(int(curr_micnuc.centroid[1])) + ':' + str(int(curr_micnuc.centroid[0])),
                                          "eccentricity": "{:.2f}".format(curr_micnuc.eccentricity),
                                          "solidity": "{:.2f}".format(curr_micnuc.solidity),
