@@ -19,11 +19,11 @@ config = { "log": logger}
 
 # If you want to use constants with your script, add them here
 config["nuclei_min_diameter"] = 100
-config["micro_nuclei_min_diameter"] = 5
+config["micro_nuclei_min_diameter"] = 15
 config["micro_nuclei_max_diameter"] = 50
 config["eccentricity_tolerance"] = 0.9
-config["solidity_tolerance"] = 0.1
-config["intensity_ratio_tolerance"] = 0.2
+config["solidity_tolerance"] = 0.9
+config["intensity_ratio_tolerance"] = 0.5
 
 # Log the start time and the final configuration so you can keep track of what you did
 config["log"].info('Start: ' + datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
