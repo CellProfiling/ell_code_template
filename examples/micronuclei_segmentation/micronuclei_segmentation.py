@@ -3,12 +3,12 @@ import pandas as pd
 from skimage.io import imsave
 from skimage.filters import threshold_multiotsu
 from skimage.measure import label, regionprops
-from skimage.morphology import binary_erosion, binary_dilation, remove_small_holes
+from skimage.morphology import binary_erosion, binary_dilation, remove_small_holes, remove_small_objects
 from skimage.segmentation import expand_labels
 
 
 def segment_micronuclei(nuc_img, nuclei_min_diameter, micnuc_min_diameter, micnuc_max_diameter,
-                        eccentricity_tolerance, solidity_tolerance, intensity_ratio,
+                        eccentricity_tolerance, solidity_tolerance, intensity_ratio, overlapping_acceptance_ratio,
                         nuclei_segmentation, cell_segmentation,
                         output_folder, output_prefix):
 
@@ -22,6 +22,8 @@ def segment_micronuclei(nuc_img, nuclei_min_diameter, micnuc_min_diameter, micnu
 
     nuc_labels = nuc_labels > 0
     nuc_labels = remove_small_holes(nuc_labels, area_threshold=(nuclei_min_diameter * nuclei_min_diameter))
+    nuc_labels_check = np.copy(nuc_labels)
+    nuc_labels_check = remove_small_objects(nuc_labels_check, min_size=micnuc_max_diameter * micnuc_max_diameter * 2)
     #imsave(f"{output_folder}/{output_prefix}qc_closing.png", np.uint8(nuc_labels))
     for i in range(0, micnuc_max_diameter):
         nuc_labels = binary_erosion(nuc_labels)
@@ -45,7 +47,12 @@ def segment_micronuclei(nuc_img, nuclei_min_diameter, micnuc_min_diameter, micnu
 
     for curr_micnuc in regionprops(mic_labels):
         discard = True
-        if curr_micnuc.eccentricity <= eccentricity_tolerance and curr_micnuc.solidity >= solidity_tolerance:
+        overlapping_micnuc = np.where(mic_labels == curr_micnuc.label, mic_labels, 0)
+        overlapping_micnuc = np.where(nuc_labels_check > 0, overlapping_micnuc, 0)
+        overlapping_micnuc = overlapping_micnuc[overlapping_micnuc != 0]
+        if (len(overlapping_micnuc) / curr_micnuc.area <= overlapping_acceptance_ratio and
+           curr_micnuc.eccentricity <= eccentricity_tolerance and
+           curr_micnuc.solidity >= solidity_tolerance):
             nuc_seg = cell_segmentation[int(curr_micnuc.centroid[0]), int(curr_micnuc.centroid[1])]
             if nuc_seg != 0:
                 micnuc_intensity = 0

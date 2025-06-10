@@ -24,6 +24,7 @@ config["micro_nuclei_max_diameter"] = 50
 config["eccentricity_tolerance"] = 0.9
 config["solidity_tolerance"] = 0.9
 config["intensity_ratio_tolerance"] = 0.5
+config["overlapping_acceptance_ratio"] = 0.2
 
 # Log the start time and the final configuration so you can keep track of what you did
 config["log"].info('Start: ' + datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
@@ -52,6 +53,7 @@ if os.path.exists("./path_list.csv"):
             micnuc_seg_df = micronuclei_segmentation.segment_micronuclei(img,
                         config["nuclei_min_diameter"], config["micro_nuclei_min_diameter"], config["micro_nuclei_max_diameter"],
                         config["eccentricity_tolerance"], config["solidity_tolerance"], config["intensity_ratio_tolerance"],
+                        config["overlapping_acceptance_ratio"],
                         nuc_seg, cyt_seg, curr_set_arr[3].strip(), curr_set_arr[4].strip())
             if micnuc_seg_df is not None:
                 df = pd.concat([df, micnuc_seg_df], ignore_index=True)
