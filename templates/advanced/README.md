@@ -1,7 +1,9 @@
-Template base
-=============
+Template advanced
+=================
 
-This is the base template you can use as a starting point for your new script. It offers you some basic functionalities off the shelf that are easy to understand and modify according your personal preferences.
+This is the advanced template you can use as a starting point for your new script. Beyond the the basic functionalities of the base template, it offers:
+- Simple parallelization based on threads; this is specially indicated for I/O intensive tasks like transfers and/or file parsing.
+- Thread safe additional compiled CSV/file result
 
 
 
@@ -30,9 +32,9 @@ Let's start with the `template.py` file:
   - If you don't want to use constants, remove the section under the comment `# If you want to use constants with your script, add them here`
   - If you don't want to use YAML config file, remove the section under the comment `# If you want to use a configuration file with your script, add it here`
   - If you don't want to use command line arguments, remove the section under the comment `# If you want to use command line parameters with your script, add them here`
-- If you don't want to use the file iteration functionality directed by `path_list.csv` file, just delete it; but then you probably want to add an `input_directory` and `output_directory` parameters so the script.
+- The file iteration functionality directed by `path_list.csv` file makes things far more easy to run and bookkeep later on, so it's not optional in this template
 
-For the configuration mechanisms you want to add, just put them in the proper place highlighted above. Depending on how you `output_directory` parameters one way or another, so your script can be interoperable with the rest seamlessly.
+For the configuration mechanisms you want to add, just put them in the proper place highlighted above. 
 
 Final touches:
 - You might want to rename the `your_code.py` file for something more related to the functionality your code aims to provide, like `custom_clustering.py` or `calculate_csv.py`

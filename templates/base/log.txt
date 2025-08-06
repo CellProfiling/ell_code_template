@@ -1,0 +1,8 @@
+INFO: Start: 2025/08/06 10:26:53
+INFO: Parameters used:
+INFO: {'log': <Logger My program (DEBUG)>, 'step': None, 'threshold': 3, 'input_directory': './input', 'output_directory': './output'}
+INFO: ----------
+INFO: I should do something here with file/s from ./input/image_set_3 and put the results in ./output/image_set_3
+INFO: I should do something here with file/s from ./input/image_set_1 and put the results in ./output/image_set_1
+INFO: ----------
+INFO: End: 2025/08/06 10:26:53

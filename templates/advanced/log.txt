@@ -1,0 +1,8 @@
+INFO: Start: 2025/08/06 11:21:51
+INFO: Parameters used:
+INFO: {'log': <Logger My program (DEBUG)>, 'workers': 2, 'result_file': 'result.csv', 'step': None, 'threshold': 3}
+INFO: ----------
+INFO: I should do something here with file/s from image_set_1 and put the results in result_set_1
+INFO: I should do something here with file/s from image_set_3 and put the results in result_set_3
+INFO: ----------
+INFO: End: 2025/08/06 11:21:51
