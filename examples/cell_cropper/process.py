@@ -2,10 +2,9 @@ import datetime
 import logging
 import os
 import pandas as pd
-from skimage.io import imread
-import cv2
 
 import cell_cropper
+import image_utils
 
 
 # This is the log configuration. It will log everything to a file AND the console
@@ -43,12 +42,12 @@ if os.path.exists("./path_list.csv"):
             os.makedirs(curr_set_arr[5].strip(), exist_ok=True)
             # We load the images as numpy arrays
             image_stack = []
-            image_stack.append([cv2.imread(curr_set_arr[0].strip(), cv2.IMREAD_GRAYSCALE)])
-            image_stack.append([cv2.imread(curr_set_arr[1].strip(), cv2.IMREAD_GRAYSCALE)])
-            image_stack.append([cv2.imread(curr_set_arr[2].strip(), cv2.IMREAD_GRAYSCALE)])
-            image_stack.append([cv2.imread(curr_set_arr[3].strip(), cv2.IMREAD_GRAYSCALE)])
+            image_stack.append([image_utils.read_grayscale_image(curr_set_arr[0].strip())])
+            image_stack.append([image_utils.read_grayscale_image(curr_set_arr[1].strip())])
+            image_stack.append([image_utils.read_grayscale_image(curr_set_arr[2].strip())])
+            image_stack.append([image_utils.read_grayscale_image(curr_set_arr[3].strip())])
 
-            cell_mask = cv2.imread(curr_set_arr[4].strip(), cv2.IMREAD_GRAYSCALE)
+            cell_mask = image_utils.read_grayscale_image(curr_set_arr[4].strip())
             # Single cell crops
             cell_bbox_df = cell_cropper.generate_crops(image_stack, cell_mask, config["crop_size"], config["crop_bitdepth"], config["crop_mask"], config["mask_cell"], curr_set_arr[5].strip(), curr_set_arr[6].strip())
             df = pd.concat([df, cell_bbox_df], ignore_index=True)

@@ -4,29 +4,11 @@ from imageio.v2 import imsave
 from skimage.measure import regionprops
 from scipy.ndimage.morphology import grey_dilation
 import pandas as pd
+import image_utils
 
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
 colors = ["red", "yellow", "blue", "green"]
-
-
-def convert_bitdepth(image, bitdepth):
-    if bitdepth == 8:
-        if image.dtype != np.uint8:
-            return (image / np.iinfo(image.dtype).max * 255).astype(np.uint8)
-        else:
-            return np.uint8(image)
-    elif bitdepth == 16:
-        if image.dtype != np.uint16:
-            return (image / np.iinfo(image.dtype).max * 65535).astype(np.uint16)
-        else:
-            return np.uint16(image)
-    elif bitdepth == 32:
-        if image.dtype != np.uint32:
-            return (image / np.iinfo(image.dtype).max * 4294967295).astype(np.uint32)
-        else:
-            return np.uint32(image)
-    return image
 
 
 def safe_crop(image, bbox):
@@ -108,14 +90,14 @@ def generate_crops(image_stack, cell_mask, crop_size, crop_bitdepth, crop_mask, 
                 image_cp = image_stack[curr_img_index][0].copy()
 
             cell_crop, _ = safe_crop(image_cp, fixed_bbox)
-            imsave(f"{output_folder}/{output_prefix}cell{region.label}_crop_" + colors[curr_img_index] + ".png", convert_bitdepth(cell_crop, crop_bitdepth))
+            imsave(f"{output_folder}/{output_prefix}cell{region.label}_crop_" + colors[curr_img_index] + ".png", image_utils.convert_bitdepth(cell_crop, crop_bitdepth))
 
             if mask_cell:
                 this_cell_mask = cell_mask == region.label
                 this_cell_mask = grey_dilation(this_cell_mask, size=7)
                 image_cp[this_cell_mask == 0] = 0
                 cell_mask_crop, _ = safe_crop(image_cp, fixed_bbox)
-                imsave(f"{output_folder}/{output_prefix}cell{region.label}_crop_masked_" + colors[curr_img_index] + ".png", convert_bitdepth(cell_mask_crop, crop_bitdepth))
+                imsave(f"{output_folder}/{output_prefix}cell{region.label}_crop_masked_" + colors[curr_img_index] + ".png", image_utils.convert_bitdepth(cell_mask_crop, crop_bitdepth))
 
         new_center = (crop_size // 2, crop_size // 2)
         new_bbox = (

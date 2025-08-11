@@ -2,8 +2,8 @@ import datetime
 import logging
 import os
 import cv2
-from skimage.io import imread
 import cellpose_segmentation
+import image_utils
 from cellpose import models
 
 
@@ -42,13 +42,13 @@ if os.path.exists("./path_list.csv"):
             # We create the output folder
             os.makedirs(curr_set_arr[3].strip(), exist_ok=True)
             # We load the images as numpy arrays
-            nuclei_img = cv2.imread(curr_set_arr[0].strip(), -1)
+            nuclei_img = image_utils.read_grayscale_image(curr_set_arr[0].strip())
             cyto_img1 = None
             cyto_img2 = None
             if not config["nuclei_only"]:
-                cyto_img1 = cv2.imread(curr_set_arr[1].strip(), -1)
+                cyto_img1 = image_utils.read_grayscale_image(curr_set_arr[1].strip())
                 if curr_set_arr[2].strip() != "":
-                    cyto_img2 = cv2.imread(curr_set_arr[2].strip(), -1)
+                    cyto_img2 = image_utils.read_grayscale_image(curr_set_arr[2].strip())
 
             # Segmentation
             cellpose_segmentation.segment(model_nuc, model_cyto, nuclei_img, cyto_img1, cyto_img2, config["nuc_diameter"], config["cyto_diameter"], curr_set_arr[3].strip(), curr_set_arr[4].strip())

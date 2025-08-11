@@ -1,7 +1,8 @@
 import numpy as np
 import os
 from skimage.filters import threshold_multiotsu
-from skimage.io import imsave, imread
+from skimage.io import imsave
+import image_utils
 
 
 def generate_otsu(config, data, classes, output_filename_prefix):
@@ -26,10 +27,8 @@ def otsu_explorer(config, input_path, output_path):
         config["log"].info("--- Exploring file " + image_file)
         # We generate the output filename prefix
         output_filename_prefix = os.path.join(output_path, image_file[:-4])
-        # We read the image as a numpy array
-        data = imread(os.path.join(input_path, image_file))
-        # We normalize the image
-        data = (data - data.min()) / (data.max() - data.min())
+        # We read the image as a numpy array and normalize it
+        data = image_utils.read_grayscale_image(os.path.join(input_path, image_file), minmax_norm=True)
         # We run several otsu threshols and save the images in low quality just to explore how they look
         generate_otsu(config, data, 3, output_filename_prefix)
         generate_otsu(config, data, 4, output_filename_prefix)

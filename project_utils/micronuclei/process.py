@@ -2,10 +2,9 @@ import datetime
 import logging
 import os
 import pandas as pd
-import numpy as np
-import cv2
 
 import micronuclei_quantification
+import image_utils
 
 
 # This is the log configuration. It will log everything to a file AND the console
@@ -41,8 +40,8 @@ if os.path.exists("./result.csv"):
     for index, row in df.iterrows():
         if curr_id != row["id"]:
             curr_id = row["id"]
-            protein_img = cv2.imread(os.path.join(config["hpa_images_base_folder"], curr_id[:curr_id.index('_')], curr_id + "green.png"), -1)
-            micnuc_seg = cv2.imread(os.path.join(config["micro_nuclei_segmentations_base_folder"], curr_id + "micronuclei_mask.png"), -1)
+            protein_img = image_utils.read_grayscale_image(os.path.join(config["hpa_images_base_folder"], curr_id[:curr_id.index('_')], curr_id + "green.png"))
+            micnuc_seg = image_utils.read_grayscale_image(os.path.join(config["micro_nuclei_segmentations_base_folder"], curr_id + "micronuclei_mask.png"))
         # Micronuclei quantification
         micnuc_data_df = micronuclei_quantification.quantify_micronuclei(protein_img, micnuc_seg, row["micnuc_label"],
                     config["micro_nuclei_expand_diameter"], config["intensity_tolerance"])

@@ -2,10 +2,9 @@ import datetime
 import logging
 import os
 import pandas as pd
-import numpy as np
-import cv2
 
 import micronuclei_segmentation
+import image_utils
 
 
 # This is the log configuration. It will log everything to a file AND the console
@@ -45,9 +44,9 @@ if os.path.exists("./path_list.csv"):
             # We create the output folder
             os.makedirs(curr_set_arr[3].strip(), exist_ok=True)
             # We load the images as numpy arrays
-            img = cv2.imread(curr_set_arr[0].strip(), -1)
-            nuc_seg = cv2.imread(curr_set_arr[1].strip(), -1)
-            cyt_seg = cv2.imread(curr_set_arr[2].strip(), -1)
+            img = image_utils.read_grayscale_image(curr_set_arr[0].strip())
+            nuc_seg = image_utils.read_grayscale_image(curr_set_arr[1].strip())
+            cyt_seg = image_utils.read_grayscale_image(curr_set_arr[2].strip())
 
             # Micronuclei segmentation
             micnuc_seg_df = micronuclei_segmentation.segment_micronuclei(img,

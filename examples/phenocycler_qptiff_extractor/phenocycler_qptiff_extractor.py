@@ -46,12 +46,13 @@ def phenocycler_qptiff_extractor(config, input_path, output_path):
         with TiffFile(os.path.join(input_path, image_file)) as tif:
             filename_without_extension = tif.filename[0:tif.filename.index('.qptiff')]
             for page in tif.series[0].pages:
-                curr_marker = ElementTree.fromstring(page.description).find('Biomarker').text
+                curr_marker = ElementTree.fromstring(page.description).find('Biomarker').text.replace(" ", "_").replace("/", "-")
                 filename_converted = filename_without_extension + '_' + curr_marker + config["image_type_extension"]
-                numpy_img = page.asarray()
-                if config["normalize"]:
-                    numpy_img = (numpy_img - numpy_img.min()) / (numpy_img.max() - numpy_img.min())
-                else:
-                    numpy_img = convert_array_by_bit_depth(numpy_img, config["bit_depth"])
-                imsave(os.path.join(output_path, filename_converted), array_type_by_bit_depth(numpy_img, config["bit_depth"]))
-                config["log"].info("--- Image " + filename_without_extension + '_' + curr_marker + config["image_type_extension"] + ' saved')
+                if not os.path.exists(os.path.join(output_path, filename_converted)):
+                    numpy_img = page.asarray()
+                    if config["normalize"]:
+                        numpy_img = (numpy_img - numpy_img.min()) / (numpy_img.max() - numpy_img.min())
+                    else:
+                        numpy_img = convert_array_by_bit_depth(numpy_img, config["bit_depth"])
+                    imsave(os.path.join(output_path, filename_converted), array_type_by_bit_depth(numpy_img, config["bit_depth"]))
+                    config["log"].info("--- Image " + filename_without_extension + '_' + curr_marker + config["image_type_extension"] + ' saved')
