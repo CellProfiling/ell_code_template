@@ -19,7 +19,7 @@ config = { "log": logger}
 # If you want to use constants with your script, add them here
 config["crop_size"] = 1024
 config["crop_bitdepth"] = 8
-config["crop_mask"] = False
+config["crop_mask"] = True
 config["mask_cell"] = False
 
 # Log the start time and the final configuration so you can keep track of what you did
@@ -39,7 +39,7 @@ if os.path.exists("./path_list.csv"):
         if curr_set.strip() != "" and not curr_set.startswith("#"):
             curr_set_arr = curr_set.split(",")
             # We create the output folder
-            os.makedirs(curr_set_arr[5].strip(), exist_ok=True)
+            os.makedirs(curr_set_arr[6].strip(), exist_ok=True)
             # We load the images as numpy arrays
             image_stack = []
             image_stack.append([image_utils.read_grayscale_image(curr_set_arr[0].strip())])
@@ -48,11 +48,14 @@ if os.path.exists("./path_list.csv"):
             image_stack.append([image_utils.read_grayscale_image(curr_set_arr[3].strip())])
 
             cell_mask = image_utils.read_grayscale_image(curr_set_arr[4].strip())
+            nuclei_mask = None
+            if curr_set_arr[5].strip() != "":
+                nuclei_mask = image_utils.read_grayscale_image(curr_set_arr[5].strip())
             # Single cell crops
-            cell_bbox_df = cell_cropper.generate_crops(image_stack, cell_mask, config["crop_size"], config["crop_bitdepth"], config["crop_mask"], config["mask_cell"], curr_set_arr[5].strip(), curr_set_arr[6].strip())
+            cell_bbox_df = cell_cropper.generate_crops(image_stack, cell_mask, nuclei_mask, config["crop_size"], config["crop_bitdepth"], config["crop_mask"], config["mask_cell"], curr_set_arr[6].strip(), curr_set_arr[7].strip())
             df = pd.concat([df, cell_bbox_df], ignore_index=True)
 
-            config["log"].info("- Saved results for " + curr_set_arr[6].strip())
+            config["log"].info("- Saved results for " + curr_set_arr[7].strip())
 
     # We store the cell crops bboxes and ids for easy localization
     df.to_csv("crop_info.csv", index=False)
