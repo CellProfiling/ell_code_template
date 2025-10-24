@@ -62,23 +62,29 @@ def segment_micronuclei(nuc_img, nuclei_min_diameter, micnuc_min_diameter, micnu
                     micnuc_intensity = np.mean(nonzero_elements)
 
                 nuc_intensity = 0
+                curr_nuc = None
                 nuc_masked_img = np.where(nuclei_segmentation == nuc_seg, nuc_img, 0)
                 nuc_masked_img = np.where(nuc_labels > 0, nuc_masked_img, 0)
                 #imsave(f"{output_folder}/{output_prefix}qc_nuclei_{nuc_seg}_masked.png", np.uint8(nuc_masked_img))
                 nonzero_elements = nuc_masked_img[nuc_masked_img != 0]
                 if nonzero_elements.size != 0:
                     nuc_intensity = np.mean(nonzero_elements)
+                    curr_nuc = regionprops(np.where(nuclei_segmentation == nuc_seg, nuclei_segmentation, 0))[0]
 
                 if nuc_intensity > 0:
                     if nuc_intensity > 0 and abs(1 - micnuc_intensity / nuc_intensity) <= intensity_ratio:
                         micnuc_data.append({ "id" : output_prefix,
                                              "micnuc_label": curr_micnuc.label,
                                              "nuclei_label": nuc_seg ,
-                                             "area": int(curr_micnuc.area),
-                                             "centroid_xy": str(int(curr_micnuc.centroid[1])) + ':' + str(int(curr_micnuc.centroid[0])),
-                                             "eccentricity": "{:.2f}".format(curr_micnuc.eccentricity),
-                                             "solidity": "{:.2f}".format(curr_micnuc.solidity),
+                                             "micnuc_area": int(curr_micnuc.area),
+                                             "micnuc_centroid_xy": str(int(curr_micnuc.centroid[1])) + ':' + str(int(curr_micnuc.centroid[0])),
+                                             "micnuc_eccentricity": "{:.2f}".format(curr_micnuc.eccentricity),
+                                             "micnuc_solidity": "{:.2f}".format(curr_micnuc.solidity),
                                              "micnuc_intensity": "{:.2f}".format(micnuc_intensity),
+                                             "nuc_area": int(curr_nuc.area),
+                                             "nuc_centroid_xy": str(int(curr_nuc.centroid[1])) + ':' + str(int(curr_nuc.centroid[0])),
+                                             "nuc_eccentricity": "{:.2f}".format(curr_nuc.eccentricity),
+                                             "nuc_solidity": "{:.2f}".format(curr_nuc.solidity),
                                              "nuc_intensity": "{:.2f}".format(nuc_intensity),
                                              })
                         discard = False

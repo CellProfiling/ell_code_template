@@ -36,7 +36,7 @@ config["log"].info('----------')
 if os.path.exists("./path_list.csv"):
     path_list = open("./path_list.csv", 'r')
 
-    df = pd.DataFrame(columns=['id', 'micnuc_label', 'nuclei_label'])
+    df = pd.DataFrame(columns=["id", "micnuc_label", "nuclei_label", "micnuc_area", "micnuc_centroid_xy", "micnuc_eccentricity", "micnuc_solidity", "micnuc_intensity", "nuc_area", "nuc_centroid_xy", "nuc_eccentricity", "nuc_solidity", "nuc_intensity"])
 
     for curr_set in path_list:
         if curr_set.strip() != "" and not curr_set.startswith("#"):
