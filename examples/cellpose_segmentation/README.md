@@ -71,4 +71,3 @@ Cellpose segmentation generates in the chosen output_folder the following files:
 - `[output_prefix]_cyto1_mask.png`: a labeled image with the cellpose cyto1 marker segmentation.
 - `[output_prefix]_cyto2_mask.png`: a labeled image with the cellpose cyto2 marker segmentation.
 - `[output_prefix]_cell_mask.png`: a labeled image with the final cell segmentation produced with the custom merging algorithm. (This is probably the one you want) 
-- Additionally, a `crop_info.csv` file will be created containing all generated cell crops bboxes for convenience.
