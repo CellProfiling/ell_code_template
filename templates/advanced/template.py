@@ -2,20 +2,22 @@ import argparse
 import concurrent.futures
 import datetime
 import logging
-import threading
+import multiprocessing
 import os
 import yaml
+from tqdm import tqdm
 
 import your_code
 
 
-# This method calls your code per worker. config dict is passed so you can have access to all configuration data
-def assign_files_to_worker(config, curr_list):
-    for curr_path in curr_list:
-        if curr_path.strip() != "" and not curr_path.startswith("#"):
-            curr_input_path = curr_path.strip().split(",")[0]
-            curr_output_path = curr_path.strip().split(",")[1]
-            your_code.your_function(config, curr_input_path, curr_output_path)
+# This wrapper calls your code for a single file. It also initializes a logger for
+# the worker process since logging.Logger cannot be pickled across processes.
+def _run_file(config, input_path, output_path):
+    if config.get("log") is None:
+        logging.basicConfig(filename=config.get("log_file", "log.txt"), encoding='utf-8',
+                            format='%(levelname)s: %(message)s', filemode='a', level=logging.DEBUG)
+        config["log"] = logging.getLogger("worker")
+    your_code.your_function(config, input_path, output_path)
 
 
 # This is the log configuration. It will log everything to a file AND the console
@@ -32,10 +34,14 @@ config["workers"] = 2
 config["result_file"] = "result.csv"
 config["step"] = "base"
 config["threshold"] = 3
+# These are example parameters in case you don't want to use the path_list.csv file. Comment this if you don't need it
+config["input_directory"] = "./input"
+config["output_directory"] = "./output"
 
 # If you want to use a configuration file with your script, add it here
-with open("config.yaml", "r") as file:
-    config = config | yaml.safe_load(file)
+if os.path.exists("config.yaml"):
+    with open("config.yaml", "r") as file:
+        config = config | yaml.safe_load(file)
 
 # If you want to use command line parameters with your script, add them here
 argparser = argparse.ArgumentParser(description="Please input the following parameters")
@@ -52,25 +58,37 @@ config["log"].info('Parameters used:')
 config["log"].info(config)
 config["log"].info('----------')
 
-# We create a thread lock to safely concurrent-write to result file
-config["result_lock"] = threading.Lock()
+# We write the result file header once before the workers start
+with open(config["result_file"], 'w') as f:
+    f.write(your_code.RESULT_HEADERS + '\n')
 
 if os.path.exists("./path_list.csv"):
-    path_list = open("./path_list.csv", 'r').readlines()
+    with open("./path_list.csv", 'r') as f:
+        path_list = f.readlines()
 
-    # We split evenly the lines in path_list amongs the desired workers
-    list_shares = []
-    for i in range(config["workers"]):
-        curr_list = []
-        for j in range(len(path_list)):
-            if j % config["workers"] == i:
-                curr_list.append(path_list[j].strip())
-        list_shares.append(curr_list)
+    # Parse valid entries from path_list
+    path_entries = []
+    for line in path_list:
+        if line.strip() != "" and not line.startswith("#"):
+            path_entries.append((line.strip().split(",")[0], line.strip().split(",")[1]))
 
-    # We create a thread per worker and assign the split lists t
-    with concurrent.futures.ThreadPoolExecutor(max_workers=config["workers"]) as executor:
-        for w in range(config["workers"]):
-            executor.submit(assign_files_to_worker, config, list_shares[w])
+    # Strip non-picklable objects from config and set up a process-safe lock
+    manager = multiprocessing.Manager()
+    worker_config = {k: v for k, v in config.items() if k != "log"}
+    worker_config["result_lock"] = manager.Lock()
+    worker_config["log_file"] = "log.txt"
+
+    # Submit one future per file and track progress with tqdm
+    with concurrent.futures.ProcessPoolExecutor(max_workers=config["workers"]) as executor:
+        futures = [executor.submit(_run_file, worker_config, inp, out) for inp, out in path_entries]
+        for future in tqdm(concurrent.futures.as_completed(futures), total=len(futures)):
+            future.result()
+# Following the input_path/output_path example, if we DON'T provide a "path_list.csv" file, we run our code once directly over the base input/output folder. Comment this if you don't need it
+else:
+    # We create the output folder. Comment this if you don't need it
+    os.makedirs(config["output_directory"], exist_ok=True)
+    for file in os.listdir(config["input_directory"]):
+        your_code.your_function(config, os.path.join(config["input_directory"], file), os.path.join(config["output_directory"], file))
 
 
 config["log"].info('----------')

@@ -1,5 +1,7 @@
 import os
 
+RESULT_HEADERS = "input_path,data2,data3"
+
 
 def your_function(config, input_path, output_path):
     config["log"].info("I should do something here with file/s from " + input_path + " and put the results in " + output_path)

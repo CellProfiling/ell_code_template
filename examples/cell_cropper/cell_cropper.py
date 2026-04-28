@@ -1,10 +1,10 @@
 import warnings
 import numpy as np
-from imageio.v2 import imsave
 from skimage.measure import regionprops
 from scipy.ndimage.morphology import grey_dilation
 import pandas as pd
 import image_utils
+import cv2
 
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
@@ -83,28 +83,28 @@ def generate_crops(image_stack, cell_mask, nuclei_mask, crop_size, crop_bitdepth
             this_cell_mask[this_cell_mask == region.label] = 1
             this_cell_mask = grey_dilation(this_cell_mask, size=7)
             curr_cell_mask, _ = safe_crop(this_cell_mask, fixed_bbox)
-            imsave(f"{output_folder}/{output_prefix}cell{region.label}_cellmask.png", np.uint8(curr_cell_mask * 255))
+            cv2.imwrite(f"{output_folder}/{output_prefix}cell{region.label}_cellmask.png", np.uint8(curr_cell_mask * 255))
             if nuclei_mask is not None:
                 this_nuclei_mask = nuclei_mask.copy()
                 this_nuclei_mask[this_nuclei_mask != region.label] = 0
                 this_nuclei_mask[this_nuclei_mask == region.label] = 1
                 this_nuclei_mask = grey_dilation(this_nuclei_mask, size=7)
                 curr_nuclei_mask, _ = safe_crop(this_nuclei_mask, fixed_bbox)
-                imsave(f"{output_folder}/{output_prefix}cell{region.label}_nucleimask.png", np.uint8(curr_nuclei_mask * 255))
+                cv2.imwrite(f"{output_folder}/{output_prefix}cell{region.label}_nucleimask.png", np.uint8(curr_nuclei_mask * 255))
 
         for curr_img_index in range(len(image_stack)):
             if curr_img_index != 0:
                 image_cp = image_stack[curr_img_index][0].copy()
 
             cell_crop, _ = safe_crop(image_cp, fixed_bbox)
-            imsave(f"{output_folder}/{output_prefix}cell{region.label}_crop_" + colors[curr_img_index] + ".png", image_utils.convert_bitdepth(cell_crop, crop_bitdepth))
+            cv2.imwrite(f"{output_folder}/{output_prefix}cell{region.label}_crop_" + colors[curr_img_index] + ".png", image_utils.convert_bitdepth(cell_crop, crop_bitdepth))
 
             if mask_cell:
                 this_cell_mask = cell_mask == region.label
                 this_cell_mask = grey_dilation(this_cell_mask, size=7)
                 image_cp[this_cell_mask == 0] = 0
                 cell_mask_crop, _ = safe_crop(image_cp, fixed_bbox)
-                imsave(f"{output_folder}/{output_prefix}cell{region.label}_crop_masked_" + colors[curr_img_index] + ".png", image_utils.convert_bitdepth(cell_mask_crop, crop_bitdepth))
+                cv2.imwrite(f"{output_folder}/{output_prefix}cell{region.label}_crop_masked_" + colors[curr_img_index] + ".png", image_utils.convert_bitdepth(cell_mask_crop, crop_bitdepth))
 
         new_center = (crop_size // 2, crop_size // 2)
         new_bbox = (

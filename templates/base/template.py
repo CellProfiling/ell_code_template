@@ -24,8 +24,9 @@ config["input_directory"] = "./input"
 config["output_directory"] = "./output"
 
 # If you want to use a configuration file with your script, add it here
-with open("config.yaml", "r") as file:
-    config = config | yaml.safe_load(file)
+if os.path.exists("config.yaml"):
+    with open("config.yaml", "r") as file:
+        config = config | yaml.safe_load(file)
 
 # If you want to use command line parameters with your script, add them here
 argparser = argparse.ArgumentParser(description="Please input the following parameters")
@@ -43,13 +44,13 @@ config["log"].info('----------')
 
 # If we provide a "path_list.csv" file, we run our code for each pair of input/output sub-folders
 if os.path.exists("./path_list.csv"):
-    path_list = open("./path_list.csv", 'r')
-    for curr_path in path_list:
-        if curr_path.strip() != "" and not curr_path.startswith("#"):
-            curr_input_path = curr_path.strip().split(",")[0]
-            curr_output_path = curr_path.strip().split(",")[1]
+    with open("./path_list.csv", 'r') as path_list:
+        for curr_path in path_list:
+            if curr_path.strip() != "" and not curr_path.startswith("#"):
+                curr_input_path = curr_path.strip().split(",")[0]
+                curr_output_path = curr_path.strip().split(",")[1]
 
-            your_code.your_function(config, curr_input_path, curr_output_path)
+                your_code.your_function(config, curr_input_path, curr_output_path)
 # Following the input_path/output_path example, if we DON'T provide a "path_list.csv" file, we run our code once directly over the base input/output folder. Comment this if you don't need it
 else:
     # We create the output folder. Comment this if you don't need it

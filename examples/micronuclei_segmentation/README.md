@@ -31,6 +31,7 @@ The code expects you to perform certain steps to run with your data:
   - Locate the line `config["eccentricity_tolerance"] = 0.9` and change the value of your maximum allowed eccentricity shape of the micronuclei (0 - circle, 1 - flattened ellipse). 
   - Locate the line `config["solidity_tolerance"] = 0.1` and change the value of your minimum allowed solidity shape of the micronuclei (0 - totally fragmented, 1 - totally convex hull shape). 
   - Locate the line `config["intensity_ratio_tolerance"] = 0.2` and change the value of your maximum allowed variance between the micronuclei average intensity and it's related nuclei average intensity (0 - no variance, 1 totally different)
+  - Locate the line `config["overlapping_acceptance_ratio"] = 0.2` and change the value of the maximum allowed overlap ratio between a micronuclei candidate and its parent nucleus (0 - no overlap accepted, 1 - full overlap accepted).
 
 To run micronuclei segmentation you have to gather the information about the sets of images you want to process. Micronuclei segmentation reads `path_list.csv` to locate each set of images, in the following .csv format: 
 

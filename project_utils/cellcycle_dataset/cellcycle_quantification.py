@@ -1,6 +1,5 @@
 import numpy as np
 from skimage.measure import regionprops
-from skimage.segmentation import expand_labels
 
 
 channels = {
@@ -27,6 +26,17 @@ def quantify_cellcycle(config, cell_id, image_stack, otsu_stack, cell_mask, nucl
     compiled_data["nuc_eccentricity"] = "{:.2f}".format(nuc.eccentricity)
     compiled_data["nuc_solidity"] = "{:.2f}".format(nuc.solidity)
 
+    for img_index in range(0, len(image_stack)):
+        marker = regionprops(np.where(nuclei_mask == cell_id, nuclei_mask, 0), image_stack[img_index][0])[0]
+        compiled_data[channels[img_index] + "_nuc_otsu3"] = str(int(otsu_stack[img_index][0])) + ':' + str(int(otsu_stack[img_index][1]))
+        compiled_data[channels[img_index] + "_nuc_mean"] = marker.intensity_mean
+        marker_image = marker.image_intensity
+        marker_image = marker_image[(marker_image != 0) & (~np.isnan(marker_image))]
+        compiled_data[channels[img_index] + "_nuc_q75"] = np.quantile(marker_image, 0.75) if len(marker_image) > 0 else 0
+        compiled_data[channels[img_index] + "_nuc_q90"] = np.quantile(marker_image, 0.9) if len(marker_image) > 0 else 0
+        compiled_data[channels[img_index] + '_nuc_ratio_pixels'] = np.count_nonzero(marker_image >= otsu_stack[img_index][0]) / np.count_nonzero(marker.area)
+        compiled_data[channels[img_index] + '_nuc_over_otsu'] = marker.intensity_mean - otsu_stack[img_index][0]
+
     cell = regionprops(np.where(cell_mask == cell_id, cell_mask, 0))[0]
     compiled_data["cell_area"] = cell.area
     compiled_data["cell_centroid_xy"] = str(int(cell.centroid[1])) + ':' + str(int(cell.centroid[0]))
@@ -34,13 +44,34 @@ def quantify_cellcycle(config, cell_id, image_stack, otsu_stack, cell_mask, nucl
     compiled_data["cell_solidity"] = "{:.2f}".format(cell.solidity)
 
     for img_index in range(0, len(image_stack)):
+        cyto_mask = np.where((cell_mask == int(cell_id)) & (nuclei_mask != cell_id), cell_mask, 0)
+        if not (cyto_mask == 0).all():
+            marker = regionprops(cyto_mask, image_stack[img_index][0])[0]
+            compiled_data[channels[img_index] + "_cyto_otsu3"] = str(int(otsu_stack[img_index][0])) + ':' + str(int(otsu_stack[img_index][1]))
+            compiled_data[channels[img_index] + "_cyto_mean"] = marker.intensity_mean
+            marker_image = marker.image_intensity
+            marker_image = marker_image[(marker_image != 0) & (~np.isnan(marker_image))]
+            compiled_data[channels[img_index] + "_cyto_q75"] = np.quantile(marker_image, 0.75) if len(marker_image) > 0 else 0
+            compiled_data[channels[img_index] + "_cyto_q90"] = np.quantile(marker_image, 0.9) if len(marker_image) > 0 else 0
+            compiled_data[channels[img_index] + '_cyto_ratio_pixels'] = np.count_nonzero(marker_image >= otsu_stack[img_index][0]) / np.count_nonzero(marker.area)
+            compiled_data[channels[img_index] + '_cyto_over_otsu'] = marker.intensity_mean - otsu_stack[img_index][0]
+        else:
+            compiled_data[channels[img_index] + "_cyto_otsu3"] = "0:0"
+            compiled_data[channels[img_index] + "_cyto_mean"] = 0
+            compiled_data[channels[img_index] + "_cyto_q75"] = 0
+            compiled_data[channels[img_index] + "_cyto_q90"] = 0
+            compiled_data[channels[img_index] + '_cyto_ratio_pixels'] = 0
+            compiled_data[channels[img_index] + '_cyto_over_otsu'] = 0
+
+    for img_index in range(0, len(image_stack)):
         marker = regionprops(np.where(cell_mask == int(cell_id), cell_mask, 0), image_stack[img_index][0])[0]
-        compiled_data[channels[img_index] + "_otsu3"] = str(int(otsu_stack[img_index][0])) + ':' + str(int(otsu_stack[img_index][1]))
-        compiled_data[channels[img_index] + "_mean"] = marker.intensity_mean
+        compiled_data[channels[img_index] + "_cell_otsu3"] = str(int(otsu_stack[img_index][0])) + ':' + str(int(otsu_stack[img_index][1]))
+        compiled_data[channels[img_index] + "_cell_mean"] = marker.intensity_mean
         marker_image = marker.image_intensity
         marker_image = marker_image[(marker_image != 0) & (~np.isnan(marker_image))]
-        compiled_data[channels[img_index] + "_q90"] = np.quantile(marker_image, 0.9) if len(marker_image) > 0 else 0
-        compiled_data[channels[img_index] + '_ratio_pixels'] = np.count_nonzero(marker_image >= otsu_stack[img_index][0]) / np.count_nonzero(marker.area)
-        compiled_data[channels[img_index] + '_over_otsu'] = marker.intensity_mean - otsu_stack[img_index][0]
+        compiled_data[channels[img_index] + "_cell_q75"] = np.quantile(marker_image, 0.75) if len(marker_image) > 0 else 0
+        compiled_data[channels[img_index] + "_cell_q90"] = np.quantile(marker_image, 0.9) if len(marker_image) > 0 else 0
+        compiled_data[channels[img_index] + '_cell_ratio_pixels'] = np.count_nonzero(marker_image >= otsu_stack[img_index][0]) / np.count_nonzero(marker.area)
+        compiled_data[channels[img_index] + '_cell_over_otsu'] = marker.intensity_mean - otsu_stack[img_index][0]
 
     return compiled_data

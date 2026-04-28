@@ -9,10 +9,11 @@ Key features
 
 - **Templates with different levels of features and complexity** 
   - Several templates ready to use: base, advanced and retro-compatible.
-  - Multiple configuration possibilities: basic constants, command line arguments or YAML configuration files.
+  - Multiple configuration possibilities: basic constants, command line arguments or YAML configuration files (all optional).
   - Simple logging mechanism.
   - File iteration embedded functionality.
-  - Template pipeline coordination (advanced).
+  - Multi-CPU parallelisation with progress bar (advanced).
+  - Thread-safe compiled CSV result with automatic header (advanced).
 - **Examples based on these templates with real functionality**
   - Readily available code to perform several requested tasks by the lab members.
   - Simple installation and usage.

@@ -34,7 +34,8 @@ model_cyto = models.CellposeModel(gpu=False, model_type='cyto3')
 
 # If we provide a "path_list.csv" file, we run our code for each pair of input/output sub-folders
 if os.path.exists("./path_list.csv"):
-    path_list = open("./path_list.csv", 'r')
+    with open("./path_list.csv", 'r') as f:
+        path_list = f.readlines()
 
     for curr_set in path_list:
         if curr_set.strip() != "" and not curr_set.startswith("#"):

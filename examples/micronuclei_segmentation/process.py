@@ -34,7 +34,8 @@ config["log"].info('----------')
 
 # If we provide a "path_list.csv" file, we run our code for each pair of input/output sub-folders
 if os.path.exists("./path_list.csv"):
-    path_list = open("./path_list.csv", 'r')
+    with open("./path_list.csv", 'r') as f:
+        path_list = f.readlines()
 
     df = pd.DataFrame(columns=["id", "micnuc_label", "nuclei_label", "micnuc_area", "micnuc_centroid_xy", "micnuc_eccentricity", "micnuc_solidity", "micnuc_intensity", "nuc_area", "nuc_centroid_xy", "nuc_eccentricity", "nuc_solidity", "nuc_intensity"])
 

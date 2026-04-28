@@ -32,7 +32,7 @@ The code expects you to perform certain steps to run with your data:
 
 To run HPA cell cropper you have to gather the information about the sets of images you want to process. HPA cell cropper reads `path_list.csv` to locate each set of images, in the following .csv format: 
 
-`r_image,y_image,b_image,g_image,segmentation_mask,crop_folder,output_prefix`
+`r_image,y_image,b_image,g_image,cell_mask,nuclei_mask,crop_folder,output_prefix`
 
 - `r_image`: the microtubules targeting marker FOV image. 
 - `y_image`: the ER targeting marker FOV image.
@@ -71,6 +71,8 @@ Output
 ------ 
 
 Cell cropper generates in the chosen crop_folder the following files:
-- `[output_prefix]_cell[X]_crop_[red|yellow|blue|green].png`: a cropped cell from the FOV.
-- `[output_prefix]_cell[X]_crop_masked_[red|yellow|blue|green].png`: a cropped and masked cell from the FOV (if the mask_cell option was selected).
-- Additionally, a `crop_info.csv` file will be created containing all generated cell crops bboxes for convenience.
+- `[output_prefix]cell[X]_crop_[red|yellow|blue|green].png`: a cropped cell from the FOV.
+- `[output_prefix]cell[X]_crop_masked_[red|yellow|blue|green].png`: a cropped and masked cell from the FOV (if the `mask_cell` option was selected).
+- `[output_prefix]cell[X]_cellmask.png`: the binary cell mask for that crop (if the `crop_mask` option was selected).
+- `[output_prefix]cell[X]_nucleimask.png`: the binary nuclei mask for that crop (if the `crop_mask` option was selected and a nuclei mask was provided).
+- Additionally, a `crop_info.csv` file will be created in the base folder containing all generated cell crops bounding boxes for convenience.

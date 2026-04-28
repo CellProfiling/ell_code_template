@@ -43,7 +43,7 @@ All images can be relative or absolute paths, or directly URLs. You can also ski
 Check the following `path_list.csv` content as an example:
 
 ```
-#nuclei_image,cyto_image,output_folder,output_prefix
+#nuclei_image,cyto_image1,cyto_image2,output_folder,output_prefix
 input/nuc1.tif,input/mt1.tif,,output,example1_
 #input/nuc2.tif,input/mt2.tif,,output,example2_
 input/nuc3.tif,input/mt3.tif,,output,example3_

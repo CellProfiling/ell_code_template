@@ -17,10 +17,10 @@ logger = logging.getLogger("HPA cell cropper")
 config = { "log": logger}
 
 # If you want to use constants with your script, add them here
-config["crop_size"] = 1024
-config["crop_bitdepth"] = 8
+config["crop_size"] = 640
+config["crop_bitdepth"] = 16
 config["crop_mask"] = True
-config["mask_cell"] = False
+config["mask_cell"] = True
 
 # Log the start time and the final configuration so you can keep track of what you did
 config["log"].info('Start: ' + datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
@@ -31,7 +31,8 @@ config["log"].info('----------')
 
 # If we provide a "path_list.csv" file, we run our code for each pair of input/output sub-folders
 if os.path.exists("./path_list.csv"):
-    path_list = open("./path_list.csv", 'r')
+    with open("./path_list.csv", 'r') as path_list:
+        path_list = path_list.readlines()
 
     df = pd.DataFrame(columns=['id', 'cell', 'x1', 'y1', 'x2', 'y2'])
 
